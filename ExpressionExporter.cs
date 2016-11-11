@@ -59,6 +59,7 @@ namespace ClassLibrary1
 			set 
 			{ 
 				this.part_file_name = value;
+				logger.Debug(String.Format("Model name = {0}", Path.GetFileName(value)));
 				if (this.NotNullFieldsForExport())
 				{
 					this.ExportExpressions();
@@ -82,9 +83,22 @@ namespace ClassLibrary1
 			this.logger.Info("Exporting parameters");
 			try
 			{
-				PartLoadStatus partLoadStatus;
-				this.workPart = this.theSession.Parts.OpenDisplay(this.part_file_name, out partLoadStatus);
-				NXAPIFunctions.ExportExpressions(this.expressions_str_arr, this.workPart);
+				try
+				{
+					string[] part_files = Directory.GetFiles(Path.GetDirectoryName(this.part_file_name));
+					if (part_files.Count(s => s == this.part_file_name) != 0)
+					{
+						PartLoadStatus partLoadStatus;
+						this.workPart = this.theSession.Parts.OpenDisplay(this.part_file_name, out partLoadStatus);
+						NXAPIFunctions.ExportExpressions(this.expressions_str_arr, this.workPart);
+					}
+					else
+					{
+						this.workPart = this.theSession.Parts.NewDisplay(this.part_file_name, Part.Units.Millimeters);
+						NXAPIFunctions.ExportExpressions(this.expressions_str_arr, this.workPart);
+					}
+				}
+				catch (IOException ex1) { logger.Error(ex1.Message); }
 			}
 			catch (NXException ex)
 			{
@@ -109,7 +123,11 @@ namespace ClassLibrary1
 			this.logger.Info("Saving model file");
 			try
 			{
-				NXAPIFunctions.SavePart(this.theSession, this.workPart, this.save_mode);
+				try
+				{
+					NXAPIFunctions.SavePart(this.theSession, this.workPart, this.save_mode);
+				}
+				catch (Exception ex1) { this.logger.Error(ex1.Message); }
 			}
 			catch (NXException ex)
 			{

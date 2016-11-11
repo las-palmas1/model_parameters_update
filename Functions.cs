@@ -64,6 +64,7 @@ namespace ClassLibrary1
             {
                 list.Add(line);
             }
+			sr.Close();
             string[][] result = new string[list.Count][];
 
             for (int i1 = 0; i1 < list.Count; i1++)

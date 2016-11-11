@@ -19,7 +19,15 @@ namespace Model_Parameters_Update
 			string current_filename = Path.Combine(parfiles_dirname, "current", filename);
 			string path_filename = Path.Combine(parfiles_dirname, "model_paths", filename);
 			string old_filename = Path.Combine(parfiles_dirname, "old", filename);
-			if (!Functions.CompareTwoParametersFiles(current_filename, old_filename))
+			logger.Info("Comparing old and current versions");
+			bool comparing_result = true;
+			try 
+			{ 
+				comparing_result = Functions.CompareTwoParametersFiles(current_filename, old_filename);
+				logger.Debug(String.Format("comparing result = {0}", comparing_result.ToString()));
+			}
+			catch (Exception ex) { logger.Error(ex.Message); }
+			if (!comparing_result)
 			{
 				logger.Info("Reading parameters");
 				string[][] exp_arr = Functions.ReadParameters(current_filename);
@@ -39,8 +47,12 @@ namespace Model_Parameters_Update
 			logger = new Logger(Path.Combine(Directory.GetCurrentDirectory(), "Model Parameters Update",
 			"Model Parameters Update", "LoggerSettings.txt"));
 			string parfiles_dir = Path.GetFullPath("Calculation\\parts_parameters\\output");
+
+			foreach (string i in Directory.GetFiles(Path.Combine(parfiles_dir, "current")))
+			{
+				UpdateParameters(parfiles_dir, Path.GetFileName(i));
+			}
 			
-			UpdateParameters(parfiles_dir, "st1_rk_blade");
 			
 		}
 		public static int GetUnloadOption(string arg)
