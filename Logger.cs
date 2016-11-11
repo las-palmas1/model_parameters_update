@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ClassLibrary1
 {
 	public enum LogMinLevel { Debug, Info, Error };
-	public enum LogTarget { Console, File };
+	public enum LogTarget { Console, File, Both };
 
 	public class Logger
 	{
@@ -36,6 +36,7 @@ namespace ClassLibrary1
 			if (settings["MinLevel"] == "Error") { this.minLevel = LogMinLevel.Error; }
 			if (settings["Target"] == "file") { this.target = LogTarget.File; }
 			if (settings["Target"] == "console") { this.target = LogTarget.Console; }
+			if (settings["Target"] == "both") { this.target = LogTarget.Both; }
 		}
 		public void Debug(string message)
 		{
@@ -43,13 +44,13 @@ namespace ClassLibrary1
 			{
 				string line = String.Format("{0} {1}  Debug  {2}", DateTime.Now.ToShortDateString(),
 					DateTime.Now.ToLongTimeString(), message);
-				if (this.target == LogTarget.File)
+				if (this.target == LogTarget.File || this.target == LogTarget.Both)
 				{
 					StreamWriter sw = new StreamWriter(this.target_filename, true);
 					sw.WriteLine(line);
 					sw.Close();
 				}
-				if (this.target == LogTarget.Console) { Console.WriteLine(line); }
+				if (this.target == LogTarget.Console || this.target == LogTarget.Both) { Console.WriteLine(line); }
 			}
 		}
 		public void Info(string message)
@@ -58,13 +59,13 @@ namespace ClassLibrary1
 			{
 				string line = String.Format("{0} {1}  Info  {2}", DateTime.Now.ToShortDateString(),
 					DateTime.Now.ToLongTimeString(), message);
-				if (this.target == LogTarget.File)
+				if (this.target == LogTarget.File || this.target == LogTarget.Both)
 				{
 					StreamWriter sw = new StreamWriter(this.target_filename, true);
 					sw.WriteLine(line);
 					sw.Close();
 				}
-				if (this.target == LogTarget.Console) { Console.WriteLine(line); }
+				if (this.target == LogTarget.Console || this.target == LogTarget.Both) { Console.WriteLine(line); }
 			}
 		}
 		public void Error(string message)
@@ -73,13 +74,13 @@ namespace ClassLibrary1
 			{
 				string line = String.Format("{0} {1}  Error  {2}", DateTime.Now.ToShortDateString(),
 					DateTime.Now.ToLongTimeString(), message);
-				if (this.target == LogTarget.File)
+				if (this.target == LogTarget.File || this.target == LogTarget.Both)
 				{
 					StreamWriter sw = new StreamWriter(this.target_filename, true);
 					sw.WriteLine(line);
 					sw.Close();
 				}
-				if (this.target == LogTarget.Console) { Console.WriteLine(line); }
+				if (this.target == LogTarget.Console || this.target == LogTarget.Both) { Console.WriteLine(line); }
 			}
 		}
 	}

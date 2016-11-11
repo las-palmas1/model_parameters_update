@@ -98,11 +98,12 @@ namespace ClassLibrary1
 						NXAPIFunctions.ExportExpressions(this.expressions_str_arr, this.workPart);
 					}
 				}
-				catch (IOException ex1) { logger.Error(ex1.Message); }
+				catch (IOException ex1) { logger.Error(ex1.Message); Environment.Exit(0); }
 			}
 			catch (NXException ex)
 			{
 				this.logger.Error(ex.Message);
+				Environment.Exit(0);
 			}
 		}
 		public void Step203Export()
@@ -127,11 +128,12 @@ namespace ClassLibrary1
 				{
 					NXAPIFunctions.SavePart(this.theSession, this.workPart, this.save_mode);
 				}
-				catch (Exception ex1) { this.logger.Error(ex1.Message); }
+				catch (Exception ex1) { this.logger.Error(ex1.Message); Environment.Exit(0); }
 			}
 			catch (NXException ex)
 			{
 				this.logger.Error(ex.Message);
+				Environment.Exit(0);
 			}
 		}
 		  

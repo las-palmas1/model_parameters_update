@@ -26,7 +26,7 @@ namespace Model_Parameters_Update
 				comparing_result = Functions.CompareTwoParametersFiles(current_filename, old_filename);
 				logger.Debug(String.Format("comparing result = {0}", comparing_result.ToString()));
 			}
-			catch (Exception ex) { logger.Error(ex.Message); }
+			catch (Exception ex) { logger.Error(ex.Message); Environment.Exit(0); }
 			if (!comparing_result)
 			{
 				logger.Info("Reading parameters");
