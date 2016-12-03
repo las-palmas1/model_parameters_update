@@ -14,10 +14,9 @@ namespace Model_Parameters_Update
 		static Session theSession = Session.GetSession();
 		private static Logger logger;
 		
-		public static void UpdateParameters(string parfiles_dirname, string filename)
+		public static void UpdateParameters(string parfiles_dirname, string filename, string model_path)
 		{
 			string current_filename = Path.Combine(parfiles_dirname, "current", filename);
-			string path_filename = Path.Combine(parfiles_dirname, "model_paths", filename);
 			string old_filename = Path.Combine(parfiles_dirname, "old", filename);
 			logger.Info("Comparing old and current versions");
 			bool comparing_result = true;
@@ -34,7 +33,7 @@ namespace Model_Parameters_Update
 				ExpressionExporter exporter = new ExpressionExporter();
 				exporter.TheSession = theSession;
 				exporter.Expressions_str_arr = exp_arr;
-				exporter.Part_file_name = Functions.ReadPath(path_filename);
+				exporter.Part_file_name = model_path;
 				logger.Info("Overwriting old parameters file version");
 				File.Copy(current_filename, old_filename, true);
 			}
@@ -48,9 +47,11 @@ namespace Model_Parameters_Update
 			"Model Parameters Update", "LoggerSettings.txt"));
 			string parfiles_dir = Path.GetFullPath("Calculation\\parts_parameters\\output");
 
-			foreach (string i in Directory.GetFiles(Path.Combine(parfiles_dir, "current")))
+			List<string> paths = Functions.ReadPaths(Path.Combine(parfiles_dir, "model_paths.txt"));
+
+			foreach (string i in paths)
 			{
-				UpdateParameters(parfiles_dir, Path.GetFileName(i));
+				UpdateParameters(parfiles_dir, Path.GetFileNameWithoutExtension(i), i);
 			}
 			
 			

@@ -112,5 +112,18 @@ namespace ClassLibrary1
 			sr.Close();
             return result;
         }
+
+		public static List<string> ReadPaths(string paths_file_name)
+		{
+			List<string> result = new List<string>();
+			StreamReader sr = new StreamReader(paths_file_name, Encoding.Default);
+			string path;
+			while ((path = sr.ReadLine()) != null)
+			{
+				result.Add(path);
+			}
+			sr.Close();
+			return result;
+		}
     }
 }
