@@ -59,7 +59,6 @@ namespace ClassLibrary1
 			set 
 			{ 
 				this.part_file_name = value;
-				logger.Debug(String.Format("Model name = {0}", Path.GetFileName(value)));
 				if (this.NotNullFieldsForExport())
 				{
 					this.ExportExpressions();
@@ -102,7 +101,7 @@ namespace ClassLibrary1
 			}
 			catch (NXException ex)
 			{
-				this.logger.Error(ex.Message);
+				this.logger.Error(ex.ToString());
 				Environment.Exit(0);
 			}
 		}

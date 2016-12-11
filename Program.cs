@@ -17,6 +17,7 @@ namespace Model_Parameters_Update
 		public static void UpdateParameters(string parfiles_dirname, string filename, string model_path)
 		{
 			string current_filename = Path.Combine(parfiles_dirname, "current", filename);
+			logger.Debug(String.Format("Model name = {0}", Path.GetFileName(model_path)));
 			string old_filename = Path.Combine(parfiles_dirname, "old", filename);
 			logger.Info("Comparing old and current versions");
 			bool comparing_result = true;
@@ -28,14 +29,18 @@ namespace Model_Parameters_Update
 			catch (Exception ex) { logger.Error(ex.Message); Environment.Exit(0); }
 			if (!comparing_result)
 			{
-				logger.Info("Reading parameters");
-				string[][] exp_arr = Functions.ReadParameters(current_filename);
-				ExpressionExporter exporter = new ExpressionExporter();
-				exporter.TheSession = theSession;
-				exporter.Expressions_str_arr = exp_arr;
-				exporter.Part_file_name = model_path;
-				logger.Info("Overwriting old parameters file version");
-				File.Copy(current_filename, old_filename, true);
+				try
+				{
+					logger.Info("Reading parameters");
+					string[][] exp_arr = Functions.ReadParameters(current_filename);
+					ExpressionExporter exporter = new ExpressionExporter();
+					exporter.TheSession = theSession;
+					exporter.Expressions_str_arr = exp_arr;
+					exporter.Part_file_name = model_path;
+					logger.Info("Overwriting old version parameters file");
+					File.Copy(current_filename, old_filename, true);
+				}
+				catch (Exception ex) { logger.Error(ex.ToString()); Environment.Exit(0); }
 			}
 
 		}
